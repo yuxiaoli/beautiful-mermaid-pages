@@ -50,6 +50,16 @@ export function buildShareLink(source: string): string {
   return `${origin}${pathname}${search}${HASH_PREFIX}${encodeBase64Url(source)}`
 }
 
+/**
+ * Build a link to the editor view for the given source.
+ * Drops any query string (e.g. `?view=render`) so the editor loads, and puts
+ * the source in the hash so it is restored on load.
+ */
+export function buildEditorLink(source: string): string {
+  const { origin, pathname } = window.location
+  return `${origin}${pathname}${HASH_PREFIX}${encodeBase64Url(source)}`
+}
+
 /** Update `location.hash` in place without adding a new history entry. */
 export function updateHash(source: string): void {
   const newHash = `${HASH_PREFIX}${encodeBase64Url(source)}`

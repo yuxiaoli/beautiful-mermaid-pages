@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { DEFAULT_THEME_ID, renderDiagram } from '../lib/renderMermaid'
-import { parseRenderParams } from '../lib/share'
+import { buildEditorLink, parseRenderParams } from '../lib/share'
 
 const params = parseRenderParams()
 
@@ -56,6 +56,12 @@ function downloadSvg() {
   if (svg.value) downloadBlob(svg.value, 'image/svg+xml', 'diagram.svg')
 }
 
+function openInEditor() {
+  // Full navigation so main.ts re-evaluates and mounts the editor (no view=render).
+  // The source travels in the hash and is restored by the editor on load.
+  window.location.assign(buildEditorLink(source.value))
+}
+
 onMounted(() => {
   if (!params.source && !params.error) {
     paramError.value =
@@ -71,6 +77,7 @@ onMounted(() => {
       <button type="button" :disabled="!svg" @click="copySvg">Copy SVG</button>
       <button type="button" :disabled="!source" @click="copySource">Copy source</button>
       <button type="button" :disabled="!svg" @click="downloadSvg">Download SVG</button>
+      <button type="button" :disabled="!source" @click="openInEditor">Open in editor</button>
     </div>
 
     <div class="render-stage">
